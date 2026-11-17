@@ -89,11 +89,12 @@ def model(data, start, end, hypothesis, capital, fee, spread_bps, slip_bps):
             symbol, stop_distance, take_distance = pending
             entry = backtest.estimate_buy(current[symbol].o, spread_bps, slip_bps)
             stake = cash * D('0.9')
-            qty = stake / (entry * (1 + fee))
-            position = {'symbol': symbol, 'entry': entry, 'qty': qty,
-                        'stake': stake, 'stop': entry - stop_distance,
-                        'take': entry + take_distance, 'started': t}
-            cash -= stake
+            if stake >= D('5'):
+                qty = stake / (entry * (1 + fee))
+                position = {'symbol': symbol, 'entry': entry, 'qty': qty,
+                            'stake': stake, 'stop': entry - stop_distance,
+                            'take': entry + take_distance, 'started': t}
+                cash -= stake
         pending = None
         if position:
             p = position
